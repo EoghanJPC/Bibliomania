@@ -1,10 +1,17 @@
 using Bibliomania.Components;
+using Bibliomania.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
 	.AddInteractiveServerComponents();
+
+builder.Services.AddHttpClient<OpenLibraryService>(client =>
+{
+	client.BaseAddress = new Uri("https://openlibrary.org/");
+	client.DefaultRequestHeaders.UserAgent.ParseAdd("Bibliomania/1.0");
+});
 
 var app = builder.Build();
 
