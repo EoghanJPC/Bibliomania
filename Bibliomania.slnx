@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="Bibliomania.Tests/Bibliomania.Tests.csproj" />
+  <Project Path="Bibliomania/Bibliomania.csproj" />
+</Solution>
