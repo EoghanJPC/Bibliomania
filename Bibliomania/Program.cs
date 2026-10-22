@@ -13,6 +13,11 @@ builder.Services.AddHttpClient<OpenLibraryService>(client =>
 	client.DefaultRequestHeaders.UserAgent.ParseAdd("Bibliomania/1.0");
 });
 
+builder.Services.AddHttpClient<GoogleBooksService>(client =>
+{
+	client.BaseAddress = new Uri("https://www.googleapis.com/books/v1/");
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
