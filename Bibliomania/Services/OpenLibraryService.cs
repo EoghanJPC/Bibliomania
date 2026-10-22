@@ -18,7 +18,7 @@ namespace Bibliomania.Services
 			response.EnsureSuccessStatusCode();
 
 			var jsonResponse = await response.Content.ReadAsStringAsync();
-			var openLibraryResponse = JsonSerializer.Deserialize<OpenLibrary>(jsonResponse);
+			var openLibraryResponse = JsonSerializer.Deserialize<OpenLibraryResponse>(jsonResponse);
 
 			var books = new List<Book>();
 

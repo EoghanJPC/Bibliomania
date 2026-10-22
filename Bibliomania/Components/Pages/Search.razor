@@ -1,0 +1,77 @@
+﻿@page "/search"
+@rendermode InteractiveServer
+@using Bibliomania.Models
+@using Bibliomania.Services
+@inject OpenLibraryService OpenLibrary
+
+<PageTitle>Library Search</PageTitle>
+
+<h1>Library Search</h1>
+
+<div class="input-group mb-3">
+	<input class="form-control" placeholder="Search by Title/Author..." @bind="query" @bind:event="oninput">
+	<button class="btn btn-primary" @onclick="SearchFunction">Search</button>
+</div>
+
+@if (isLoading)
+{
+	<p>Perusing The Shelves...</p>
+}
+else if (errorMessage != null)
+{
+	<div class="alert">@errorMessage</div>
+}
+else if (books != null)
+{
+	@if (books.Count == 0)
+	{
+		<p>Not on our shelves...</p>
+	}
+	else
+	{
+		@foreach (var book in books	)
+		{
+			<div class="card mb-2">
+				<div class="card-body d-flex">
+					@if (book.BookCover != null)
+					{
+						<img src="@book.BookCover" alt="Cover Image" class="me-3" style="width: 100px; height: auto;">
+					}
+					<div>
+						<h5 class="card-title">@book.BookTitle</h5>
+						<p class="card-text">Author: @string.Join(", ", book.Authors)</p>
+						<p class="card-text">First Published: @(book.Published?.ToString() ?? "Unknown")</p>
+					</div>	
+				</div>
+			</div>
+		}
+	}
+}
+
+@code {
+	private string query = string.Empty;
+	private List<Book>? books;
+	private bool isLoading;
+	private string? errorMessage;
+
+	private async Task SearchFunction()
+	{
+		if (string.IsNullOrWhiteSpace(query)) return;
+
+		isLoading = true;
+		errorMessage = null;
+
+		try
+		{
+			books = await OpenLibrary.SearchBooksAsync(query);
+		}
+		catch(HttpRequestException)
+		{
+			errorMessage = "OpenLibrary is currently unreachable. Please try again later.";
+		}
+		finally
+		{
+			isLoading = false;
+		}
+	}
+}

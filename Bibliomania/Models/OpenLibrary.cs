@@ -2,10 +2,10 @@
 
 namespace Bibliomania.Models
 {
-	public class OpenLibrary
+	public class OpenLibraryResponse
 	{
 		[JsonPropertyName("docs")]
-		public List<OpenLibraryDoc> Docs { get; set; }
+		public List<OpenLibraryDoc> Docs { get; set; } = new();
 	}
 
 	public class OpenLibraryDoc
