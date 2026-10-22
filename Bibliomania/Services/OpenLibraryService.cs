@@ -31,7 +31,8 @@ namespace Bibliomania.Services
 						BookTitle = doc.Title ?? "Unknown Title",
 						Authors = doc.AuthorName ?? new List<string> { "Unknown Author" },
 						Published = doc.FirstPublishYear,
-						BookCover = doc.CoverId.HasValue ? $"https://covers.openlibrary.org/b/id/{doc.CoverId}-M.jpg" : null
+						BookCover = doc.CoverId.HasValue ? $"https://covers.openlibrary.org/b/id/{doc.CoverId}-M.jpg" : null,
+						Source = "Open Library"
 					};
 					books.Add(book);
 				}
