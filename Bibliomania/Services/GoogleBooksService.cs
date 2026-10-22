@@ -37,7 +37,7 @@ namespace Bibliomania.Services
 						{
 							BookTitle = volumeInfo.Title ?? "Unknown Title",
 							Authors = volumeInfo.Authors ?? new List<string> { "Unknown Author" },
-							Published = ParsePublishedDate(volumeInfo.PublishedDate),
+							Published = ParseYear(volumeInfo.PublishedDate),
 							Blurb = volumeInfo.Description,
 							Pages = volumeInfo.PageCount,
 							BookCover = volumeInfo.ImageLinks?.Thumbnail,
@@ -52,7 +52,7 @@ namespace Bibliomania.Services
 
 		private static int? ParseYear(string? date)
 		{
-			if(date != null && date.Length >= 4 && int.TryParse(date.Substring(0,4), out var year)
+			if(date != null && date.Length >= 4 && int.TryParse(date.Substring(0,4), out var year))
 			{
 				return year;
 			}

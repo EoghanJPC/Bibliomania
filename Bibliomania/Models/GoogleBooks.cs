@@ -5,7 +5,7 @@ namespace Bibliomania.Models
 	public class GoogleBooksResponse
 	{
 		[JsonPropertyName("items")]
-		public List<GoogleBooksItem>? Items { get; set; };
+		public List<GoogleBooksItem>? Items { get; set; }
 	}
 	public class GoogleBooksItem
 	{

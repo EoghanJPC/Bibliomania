@@ -68,6 +68,8 @@ else if (books != null)
 
 		isLoading = true;
 		errorMessage = null;
+		warningMessage = null;
+		books = new List<Book>();
 
 		try
 		{
@@ -82,10 +84,10 @@ else if (books != null)
 		{
 			books.AddRange(await GoogleBooks.SearchBooksAsync(query));
 		}
-		catch
-		{
-			warningMessage += "GoogleBooks could not be reached at this time...";		
-		}
+		catch (HttpRequestException ex)
+{
+    warningMessage += $"Google Books could not be reached ({ex.StatusCode?.ToString() ?? ex.Message}).";
+}
 
 		if(books.Count == 0 && warningMessage != null)
 		{
