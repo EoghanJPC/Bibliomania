@@ -4,6 +4,7 @@
 @using Bibliomania.Services
 @inject OpenLibraryService OpenLibrary
 @inject GoogleBooksService GoogleBooks
+@inject ReviewService ReviewService
 
 <PageTitle>Library Search</PageTitle>
 
@@ -47,6 +48,51 @@ else if (books != null)
 						<h5 class="card-title">@book.BookTitle</h5>
 						<p class="card-text">Author: @string.Join(", ", book.Authors)</p>
 						<p class="card-text">First Published: @(book.Published?.ToString() ?? "Unknown")</p>
+						
+						@{
+							var avg = reviewService.GetAverageStars(book.Key);
+							var reviews = reviewService.GetReviewsForBook(book.Key);
+						}
+
+						@if (avg != null)
+						{
+							<p class="mb-1">Club rating: <strong>@avg.Value.ToString("0.0")</strong> / 5 (@reviews.Count review@(reviews.Count == 1 ? "" : "s"))</p>
+						}
+						else
+						{
+							<p class="text-muted mb-1">No club reviews yet</p>
+						}
+
+						@foreach (var r in reviews.Take(3))
+						{
+							<p class="mb-1"><small><strong>@r.MemberName</strong> (@r.Stars/5)@(r.Comment != null ? ": " + r.Comment : "")</small></p>
+						}
+
+						<button class="btn btn-outline-primary btn-sm" @onclick="() => OpenReview(book)">Review this book</button>
+
+						@if (reviewingBook == book)
+						{
+							<div class="mt-2 border rounded p-2">
+								@if (reviewError != null)
+								{
+									<div class="alert alert-danger py-1">@reviewError</div>
+								}
+
+								<input class="form-control mb-2" placeholder="Your name" @bind="reviewName" />
+
+								<select class="form-select mb-2" @bind="reviewStars">
+									@for (int i = 5; i >= 1; i--)
+									{
+										<option value="@i">@i star@(i > 1 ? "s" : "")</option>
+									}
+								</select>
+
+								<textarea class="form-control mb-2" rows="2" placeholder="Comment (optional)" @bind="reviewComment"></textarea>
+								<button class="btn btn-success btn-sm" @onclick="SaveReview">Save review</button>
+								<button class="btn btn-link btn-sm" @onclick="CancelReview">Cancel</button>
+							</div>
+						}					
+	
 						<span class="badge bg-secondary">@book.Source</span>
 					</div>	
 				</div>
@@ -85,9 +131,9 @@ else if (books != null)
 			books.AddRange(await GoogleBooks.SearchBooksAsync(query));
 		}
 		catch (HttpRequestException ex)
-{
-    warningMessage += $"Google Books could not be reached ({ex.StatusCode?.ToString() ?? ex.Message}).";
-}
+		{
+			warningMessage += $"Google Books could not be reached ({ex.StatusCode?.ToString() ?? ex.Message}).";
+		}
 
 		if(books.Count == 0 && warningMessage != null)
 		{
@@ -97,4 +143,44 @@ else if (books != null)
 
 		isLoading = false; 
 	}
+	
+	private Book? reviewingBook;
+	private string reviewerName = string.Empty;
+	private int reviewStars = 5;
+	private string? reviewComment = "";
+	private string? reviewError;
+
+	private void OpenReview(Book book)
+	{
+		reviewingBook = book;
+		reviewerName = string.Empty;
+		reviewStars = 5;
+		reviewComment = string.Empty;
+		reviewError = null;
+	}
+	private void CancelReview()
+	{
+		reviewingBook = null;
+	}
+	private void SaveReview()
+	{
+		if (reviewingBook == null)
+		{
+			reviewError = "No book selected to review...";
+			return;
+		}
+		
+		try
+		{
+			ReviewService.AddReview(reviewingBook.Key, reviewingBook.BookTitle, reviewerName, reviewStars, reviewComment);
+			reviewingBook = null;
+		}
+		catch (ArgumentException ae)
+		{
+			reviewError = $"Error saving review: {ae.Message}";
+		}
+		catch (IOException io)
+		{
+			reviewError = $"Error saving review: {io.Message}";
+		}
 }

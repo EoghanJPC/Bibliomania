@@ -18,6 +18,8 @@ builder.Services.AddHttpClient<GoogleBooksService>(client =>
 	client.BaseAddress = new Uri("https://www.googleapis.com/books/v1/");
 });
 
+builder.Services.AddSingleton(new ReviewService(Path.Combine(builder.Environment.ContentRootPath, "reviews.json")));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
