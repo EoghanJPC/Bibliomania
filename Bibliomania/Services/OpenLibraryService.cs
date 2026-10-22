@@ -14,7 +14,7 @@ namespace Bibliomania.Services
 
 		public async Task<List<Book>> SearchBooksAsync(string query)
 		{
-			var response = await _httpClient.GetAsync($"https://openlibrary.org/search.json?q={query}");
+			var response = await _httpClient.GetAsync($"https://openlibrary.org/search.json?q={Uri.EscapeDataString(query)}&limit=10&fields=title,author_name,first_publish_year,cover_i");
 			response.EnsureSuccessStatusCode();
 
 			var jsonResponse = await response.Content.ReadAsStringAsync();

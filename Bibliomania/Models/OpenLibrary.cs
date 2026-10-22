@@ -14,9 +14,9 @@ namespace Bibliomania.Models
 		public string? Title { get; set; }
 		[JsonPropertyName("author_name")]
 		public List<string>? AuthorName { get; set; }
-		[JsonPropertyName("publishment_year")]
+		[JsonPropertyName("first_publish_year")]
 		public int? FirstPublishYear { get; set; }
-		[JsonPropertyName("cover")]
+		[JsonPropertyName("cover_i")]
 		public int? CoverId { get; set; }
 	}
 }
