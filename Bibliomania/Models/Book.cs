@@ -10,5 +10,7 @@
 		public string? Blurb { get; set; }
 		public int? Pages { get; set; }
 		public string Source { get; set; }
+
+		public string Key => $"{BookTitle}|{Authors.FirstOrDefault()}".ToLowerInvariant;
 	}
 }
