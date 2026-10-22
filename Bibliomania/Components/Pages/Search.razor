@@ -3,6 +3,7 @@
 @using Bibliomania.Models
 @using Bibliomania.Services
 @inject OpenLibraryService OpenLibrary
+@inject GoogleBooksService GoogleBooks
 
 <PageTitle>Library Search</PageTitle>
 
@@ -12,6 +13,11 @@
 	<input class="form-control" placeholder="Search by Title/Author..." @bind="query" @bind:event="oninput">
 	<button class="btn btn-primary" @onclick="SearchFunction">Search</button>
 </div>
+
+@if (warningMessage != null)
+{
+	<div class="alert">@warningMessage</div>	
+}
 
 @if (isLoading)
 {
@@ -41,6 +47,7 @@ else if (books != null)
 						<h5 class="card-title">@book.BookTitle</h5>
 						<p class="card-text">Author: @string.Join(", ", book.Authors)</p>
 						<p class="card-text">First Published: @(book.Published?.ToString() ?? "Unknown")</p>
+						<span class="badge bg-secondary">@book.Source</span>
 					</div>	
 				</div>
 			</div>
@@ -53,6 +60,7 @@ else if (books != null)
 	private List<Book>? books;
 	private bool isLoading;
 	private string? errorMessage;
+	private string? warningMessage;
 
 	private async Task SearchFunction()
 	{
@@ -63,15 +71,28 @@ else if (books != null)
 
 		try
 		{
-			books = await OpenLibrary.SearchBooksAsync(query);
+			books.AddRange(await OpenLibrary.SearchBooksAsync(query));
 		}
 		catch(HttpRequestException)
 		{
-			errorMessage = "OpenLibrary is currently unreachable. Please try again later.";
+			warningMessage = "OpenLibrary could not be reached at this time...";	
 		}
-		finally
+
+		try
 		{
-			isLoading = false;
+			books.AddRange(await GoogleBooks.SearchBooksAsync(query));
 		}
+		catch
+		{
+			warningMessage += "GoogleBooks could not be reached at this time...";		
+		}
+
+		if(books.Count == 0 && warningMessage != null)
+		{
+			errorMessage = warningMessage;
+			warningMessage = null;
+		}
+
+		isLoading = false; 
 	}
 }
