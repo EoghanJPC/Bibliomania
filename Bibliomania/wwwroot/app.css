@@ -205,3 +205,12 @@ a {
     .hero p {
         font-style: italic;
     }
+.sidebar .nav-link .bi {
+    margin-right: .5rem;
+    color: #d9b97a;
+}
+
+.sidebar .nav-link:hover .bi,
+.sidebar .nav-link.active .bi {
+    color: #fff3d0;
+}
