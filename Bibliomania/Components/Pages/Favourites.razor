@@ -19,16 +19,38 @@
 }
 else
 {
-	<ol>
-		@foreach (var book in topFive)
-		{
-			<li>
-				<strong>@book.bookTitle</strong> - @book.averageRating.ToString("0.0")/5 stars (@book.count review@(book.count == 1 ? "" : "s"))
-			</li>
-		}
-	</ol>
+	@for (int i = 0; i < topFive.Count; i++)
+	{
+		var book = topFive[i];
+		var reviews = reviewService.GetReviews(book.BookKey);
+
+		<div class="card mb-3">
+			<div class="card-body d-flex">
+				@if (book.BookCover != null)
+				{
+					<img src="@book.BookCover" alt="Cover of @book.BookTitle" class="me-3 fav-cover" />
+				}
+				else
+				{
+					<div class="me-3 fav-cover fav-placeholder"><span class="bi bi-book"></span></div>
+				}
+				<div class="flex-grow-1">
+					<h4 class="mb-0">#@(i + 1) @book.BookTitle</h4>
+					@if (!string.IsNullOrEmpty(book.Authors))
+					{
+						<p class="mb-1 fst-italic">by @book.Authors</p>
+					}
+					<p class="mb-2">
+						<span class="fav-stars">@(new string('★', (int)Math.Round(book.AverageStars)))@(new string('☆', 5 - (int)Math.Round(book.AverageStars)))</span>
+						<strong>@book.AverageStars.ToString("0.0")</strong> / 5 (@book.ReviewCount review@(book.ReviewCount == 1 ? "" : "s"))
+					</p>
+					@foreach (var r in reviews.Take(3))
+					{
+						<p class="mb-1"><small><strong>@r.MemberName</strong> (@r.Stars/5)@(string.IsNullOrWhiteSpace(r.ReviewText) ? "" : ": " + r.ReviewText)</small></p>
+					}
+				</div>
+			</div>
+		</div>
+	}
 }
 
-@code {
-	
-}

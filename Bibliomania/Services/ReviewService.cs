@@ -70,7 +70,7 @@ namespace Bibliomania.Services
 			File.WriteAllText(_filePath, json);
 		}
 
-		public List<(string bookTitle, double averageRating, int count)> getTopRated()
+		public List<BestRatedBooks> getTopRated()
 		{ 
 			return _reviews
 				.GroupBy(r => r.BookKey)
