@@ -1,0 +1,32 @@
+﻿@page "/favourites"
+@rendermode InteractiveServer
+@using Bibliomania.Models
+@inject ReviewService reviewService
+
+<PageTitle>Favourites</PageTitle>
+
+<h1>The Club's Top 5</h1>
+
+@{
+	var topFive = reviewService.GetTopFiveBooks();
+}
+
+@if (topFive.Count == 0)
+{
+	<p>The Club hasn't rated any books yet, browse the stacks to add some!</p>
+}
+else
+{
+	<ol>
+		@foreach (var book in topFive)
+		{
+			<li>
+				<strong>@book.BookTitle</strong> by @string.Join(", ", book.Authors) - @book.AverageStars.ToString("0.0")/5 stars (@book.ReviewCount review@(book.ReviewCount == 1 ? "" : "s"))
+			</li>
+		}
+	</ol>
+})
+
+@code {
+	
+}
