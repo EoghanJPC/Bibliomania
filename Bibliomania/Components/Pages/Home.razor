@@ -1,7 +1,66 @@
 ﻿@page "/"
+@rendermode InteractiveServer
+@using Bibliomania.Models
+@using Bibliomania.Services
+@inject OpenLibraryService openLibrary
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Bibliomania</PageTitle>
 
-<h1>Hello, world!</h1>
+<section class="hero">
+	<h1>New Releases fresh from the Press!</h1>
+	<p>The Newest Books Added to Our Collection from OpenLibrary</p>
+</section>
 
-Welcome to your new app.
+@if(isLoading)
+{
+	<p>Stacking Up the New Books...</p>	
+}
+else if (errorMessage != null)
+{
+	<div class = "alert alert-danger">@errorMessage</div>
+}
+else if (newBooks.Count == 0)
+{
+	<p>No New Titles Found Yet...</p>	
+}
+else
+{
+	<div class = "row row-cols-2 row-cols-md-4 row-cols-xl-6 g-3">
+		@foreach (var book in newBooks)	
+		{
+			<div class = "col">
+				<div class = "card h-100">
+					<img src="@book.BookCover" class="card-img-top book-cover" />
+					<div class="card-body">
+						<h5 class ="card-title">@book.BookTitle</h5>
+						<p class="card-text small mb-0">@string.Join(", ", book.Authors)</p>
+						<p class="card-text small text-muted">@(book.Published?.ToString() ?? "")</p>
+					</div>
+				</div>
+			</div>
+		}
+	</div>
+}
+
+@code{
+	private List<Book> newBooks = new();
+	private bool isLoading = true;
+	private string? errorMessage;
+
+	protected override async Task OnInitializedAsync()
+	{
+		try
+		{
+			newBooks = await openLibrary.GetNewReleasesAsync();
+		}
+		catch(Exception ex) when (ex is HttpRequestException or TaskCanceledException)
+		{
+			errorMessage = "The New Arrivals can't be accessed right now, try again later!";
+		}
+		finally
+		{
+			isLoading = false;
+		}
+	}
+
+}
