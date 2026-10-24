@@ -74,9 +74,17 @@ namespace Bibliomania.Services
 		{ 
 			return _reviews
 				.GroupBy(r => r.BookKey)
-				.Select(g => (bookTitle: g.First().BookTitle, averageRating: g.Average(r => r.Stars), count: g.Count()))
-				.OrderByDescending(x => x.averageRating)
-				.ThenByDescending(x => x.count)
+				.Select(g => new BestRatedBooks
+				{
+					BookKey = g.Key,
+					BookTitle = g.First().BookTitle,
+					Authors = g.First().Authors,
+					BookCover = g.Select(r => r.BookCover).FirstOrDefault(c => c != null),
+					AverageStars = g.Average(r => r.Stars),
+					ReviewCount = g.Count()
+				})
+				.OrderByDescending(x => x.AverageStars)
+				.ThenByDescending(x => x.ReviewCount)
 				.Take(5)
 				.ToList();
 		}

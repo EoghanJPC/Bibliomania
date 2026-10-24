@@ -176,6 +176,8 @@ else if (books != null)
 			{
 				BookKey = reviewingBook.Key,
 				BookTitle = reviewingBook.BookTitle,
+				Authors = string.Join(", ", reviewingBook.Authors),
+				BookCover = reviewingBook.BookCover,
 				MemberName = reviewName,
 				Stars = reviewStars,
 				ReviewText = string.IsNullOrWhiteSpace(reviewComment) ? null : reviewComment.Trim()
