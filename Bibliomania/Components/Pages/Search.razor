@@ -50,8 +50,8 @@ else if (books != null)
 						<p class="card-text">First Published: @(book.Published?.ToString() ?? "Unknown")</p>
 						
 						@{
-							var avg = reviewService.GetAverageStars(book.Key);
-							var reviews = reviewService.GetReviewsForBook(book.Key);
+							var avg = ReviewService.GetAverageStars(book.Key);
+							var reviews = ReviewService.GetReviews(book.Key);
 						}
 
 						@if (avg != null)
@@ -65,7 +65,7 @@ else if (books != null)
 
 						@foreach (var r in reviews.Take(3))
 						{
-							<p class="mb-1"><small><strong>@r.MemberName</strong> (@r.Stars/5)@(r.Comment != null ? ": " + r.Comment : "")</small></p>
+							<p class="mb-1"><small><strong>@r.MemberName</strong> (@r.Stars/5)@(r.ReviewText != null ? ": " + r.ReviewText : "")</small></p>
 						}
 
 						<button class="btn btn-outline-primary btn-sm" @onclick="() => OpenReview(book)">Review this book</button>
@@ -145,7 +145,7 @@ else if (books != null)
 	}
 	
 	private Book? reviewingBook;
-	private string reviewerName = string.Empty;
+	private string reviewName = string.Empty;
 	private int reviewStars = 5;
 	private string? reviewComment = "";
 	private string? reviewError;
@@ -153,7 +153,7 @@ else if (books != null)
 	private void OpenReview(Book book)
 	{
 		reviewingBook = book;
-		reviewerName = string.Empty;
+		reviewName = string.Empty;
 		reviewStars = 5;
 		reviewComment = string.Empty;
 		reviewError = null;
@@ -172,15 +172,23 @@ else if (books != null)
 		
 		try
 		{
-			ReviewService.AddReview(reviewingBook.Key, reviewingBook.BookTitle, reviewerName, reviewStars, reviewComment);
+			ReviewService.AddReview(new ClubReview
+			{
+				BookKey = reviewingBook.Key,
+				BookTitle = reviewingBook.BookTitle,
+				MemberName = reviewName,
+				Stars = reviewStars,
+				ReviewText = string.IsNullOrWhiteSpace(reviewComment) ? null : reviewComment.Trim()
+			});
 			reviewingBook = null;
 		}
 		catch (ArgumentException ae)
 		{
 			reviewError = $"Error saving review: {ae.Message}";
 		}
-		catch (IOException io)
+		catch (IOException)
 		{
-			reviewError = $"Error saving review: {io.Message}";
+			reviewError = "Review Couldn't be Saved, Please Try Again Later...";
 		}
+	}
 }

@@ -69,5 +69,16 @@ namespace Bibliomania.Services
 			var json = JsonSerializer.Serialize(_reviews, new JsonSerializerOptions { WriteIndented = true });
 			File.WriteAllText(_filePath, json);
 		}
+
+		public List<(string bookTitle, double averageRating, int count)> getTopRated()
+		{ 
+			return _reviews
+				.GroupBy(r => r.BookKey)
+				.Select(g => (bookTitle: g.First().BookTitle, averageRating: g.Average(r => r.Stars), count: g.Count()))
+				.OrderByDescending(x => x.averageRating)
+				.ThenByDescending(x => x.count)
+				.Take(5)
+				.ToList();
+		}
 	}
 }

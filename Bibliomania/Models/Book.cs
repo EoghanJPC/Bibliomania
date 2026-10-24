@@ -11,6 +11,6 @@
 		public int? Pages { get; set; }
 		public string Source { get; set; }
 
-		public string Key => $"{BookTitle}|{Authors.FirstOrDefault()}".ToLowerInvariant;
+		public string Key => $"{BookTitle}|{Authors.FirstOrDefault()}".ToLowerInvariant();
 	}
 }
