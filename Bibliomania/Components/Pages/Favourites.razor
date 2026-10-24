@@ -1,14 +1,16 @@
 ﻿@page "/favourites"
 @rendermode InteractiveServer
 @using Bibliomania.Models
+@using Bibliomania.Services
 @inject ReviewService reviewService
+
 
 <PageTitle>Favourites</PageTitle>
 
 <h1>The Club's Top 5</h1>
 
 @{
-	var topFive = reviewService.GetTopFiveBooks();
+	var topFive = reviewService.getTopRated();
 }
 
 @if (topFive.Count == 0)
@@ -21,11 +23,11 @@ else
 		@foreach (var book in topFive)
 		{
 			<li>
-				<strong>@book.BookTitle</strong> by @string.Join(", ", book.Authors) - @book.AverageStars.ToString("0.0")/5 stars (@book.ReviewCount review@(book.ReviewCount == 1 ? "" : "s"))
+				<strong>@book.bookTitle</strong> - @book.averageRating.ToString("0.0")/5 stars (@book.count review@(book.count == 1 ? "" : "s"))
 			</li>
 		}
 	</ol>
-})
+}
 
 @code {
 	
