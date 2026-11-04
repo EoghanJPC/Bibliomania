@@ -144,6 +144,10 @@ else if (books != null)
 			warningMessage += $"Google Books could not be reached ({ex.StatusCode?.ToString() ?? ex.Message}).";
 		}
 
+		books = BookMerger.Merge(books)
+			.OrderByDescending(b => b.Source.Contains('+'))
+			.ToList();
+
 		if(books.Count == 0 && warningMessage != null)
 		{
 			errorMessage = warningMessage;
