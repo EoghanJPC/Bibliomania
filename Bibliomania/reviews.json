@@ -4,8 +4,43 @@
     "BookKey": "god emperor of dune|frank herbert",
     "BookTitle": "God Emperor of Dune",
     "MemberName": "Eoghan",
+    "Authors": null,
+    "BookCover": null,
     "Stars": 3,
     "ReviewText": "Never even heard of it",
     "ReviewDate": "2026-10-22T17:52:36.4903379Z"
+  },
+  {
+    "Id": "de057eed-ea72-4407-85af-96c6684160e0",
+    "BookKey": "dune|frank herbert",
+    "BookTitle": "Dune",
+    "MemberName": "Sarah",
+    "Authors": "Frank Herbert",
+    "BookCover": "https://covers.openlibrary.org/b/id/11481354-M.jpg",
+    "Stars": 5,
+    "ReviewText": null,
+    "ReviewDate": "2026-11-04T15:53:14.9363502Z"
+  },
+  {
+    "Id": "5ec672cf-28b9-40b8-b2dd-158efd0fe18a",
+    "BookKey": "dune|frank herbert",
+    "BookTitle": "Dune",
+    "MemberName": "Michael",
+    "Authors": "Frank Herbert",
+    "BookCover": "https://covers.openlibrary.org/b/id/11481354-M.jpg",
+    "Stars": 3,
+    "ReviewText": null,
+    "ReviewDate": "2026-11-04T15:53:26.2678364Z"
+  },
+  {
+    "Id": "a0e04865-e21a-43e2-acfd-f9f550df7157",
+    "BookKey": "the name of the wind|patrick rothfuss",
+    "BookTitle": "The Name of the Wind",
+    "MemberName": "Eoghan",
+    "Authors": "Patrick Rothfuss, Marc Simonetti",
+    "BookCover": "https://covers.openlibrary.org/b/id/11480483-M.jpg",
+    "Stars": 5,
+    "ReviewText": null,
+    "ReviewDate": "2026-11-04T15:53:45.1135989Z"
   }
 ]
