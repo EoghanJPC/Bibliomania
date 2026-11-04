@@ -48,6 +48,15 @@ else if (books != null)
 						<h5 class="card-title">@book.BookTitle</h5>
 						<p class="card-text">Author: @string.Join(", ", book.Authors)</p>
 						<p class="card-text">First Published: @(book.Published?.ToString() ?? "Unknown")</p>
+
+						@if (book.Pages != null)
+						{
+							<p class="card-text">Pages: @book.Pages</p>
+						}
+						@if (!string.IsNullOrEmpty(book.Blurb))
+						{
+							<p class="card-text"><small>@(book.Blurb.Length > 200 ? book.Blurb[..200] + "..." : book.Blurb)</small></p>
+						}
 						
 						@{
 							var avg = ReviewService.GetAverageStars(book.Key);
