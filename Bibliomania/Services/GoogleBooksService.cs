@@ -11,6 +11,7 @@ namespace Bibliomania.Services
 		{
 			_httpClient = httpClient;
 			_apiKey = configuration["GoogleBooks:ApiKey"];
+			Console.WriteLine($"Google key loaded: {!string.IsNullOrEmpty(_apiKey)}");
 		}
 		public async Task<List<Book>> SearchBooksAsync(string query)
 		{
